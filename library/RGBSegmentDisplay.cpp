@@ -30,20 +30,20 @@ void RGBSegmentDisplay::setNumber(int number, int index) {
 		return;
 	}
   _digitSelectedCharArray[index] = number;
-  for (int i = 0; i < 6; i++) {
-    int digitToDisplay = _digitSelectedCharArray[i];
-    for (int j = 0; j < 28; j++) {
-      bool pixelOn = _numberArray[digitToDisplay][j];
-      int pixelAddress = j + (i * 28);
-      if (pixelOn) {
-        _strip.SetPixelColor(pixelAddress, _rgbColor);  
-      } else {
-        _strip.SetPixelColor(pixelAddress, _offColor);
-      }
-    }
-  }
 }
 
 void RGBSegmentDisplay::show() {
+	  for (int i = 0; i < 6; i++) {
+		int digitToDisplay = _digitSelectedCharArray[i];
+		for (int j = 0; j < 28; j++) {
+		  bool pixelOn = _numberArray[digitToDisplay][j];
+		  int pixelAddress = j + (i * 28);
+		  if (pixelOn) {
+			_strip.SetPixelColor(pixelAddress, _rgbColor);  
+		  } else {
+			_strip.SetPixelColor(pixelAddress, _offColor);
+		  }
+		}
+	}
 	_strip.Show();
 }
