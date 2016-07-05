@@ -4,37 +4,53 @@
   #include <avr/power.h>
 #endif*/
 
-#define PIN            D5
+#//define PIN            D5 //Pin14 <- Define in RGBSegmentDisplay.h (template problem)
 // How many NeoPixels are attached to the Arduino?
 #define NUMPIXELS      192
 
-RGBSegmentDisplay segmentDisp(PIN);
+RGBSegmentDisplay segmentDisp;
 VolleyScore score;
 
 void setup() {
   Serial.begin(115200);
   segmentDisp.begin();
-  //
 }
 
+int stringToInt(int startIndex, int endIndex, String commandIn) {
+  return commandIn.substring(startIndex, endIndex).toInt();
+}
+
+int getFirstDigit(int score) {
+  return score / 10;
+}
+
+int getSecondDigit(int score) {
+  return score % 10;
+}
+
+String receivedCommand;
 void loop() {
   delay(2000);
- // Serial.println("1");
-  if (Serial.available() > 0) {
-    char c = Serial.read();
-    switch (c) {
-      case '0':
-        score.reset();
-        break;
-      case '1':
-        score.addPointTeam1();
-        break;
-      case '2':
-        score.addPointTeam2();
-        break;
+  // Serial.println("1");
+  while (Serial.available()) {
+    delay(3);
+    if (Serial.available() > 0) {
+      char c = Serial.read();
+      receivedCommand += c;
     }
   }
 
+  if (receivedCommand.startsWith("1pT1")) {
+    score.addPointTeam1();
+  }
+  if (receivedCommand.startsWith("1pT2")) {
+    score.addPointTeam2();
+  }
+  if (receivedCommand.startsWith("color")) {
+    segmentDisp.setColor(stringToInt(5, 8, receivedCommand), stringToInt(8, 11, receivedCommand), stringToInt(11, 14, receivedCommand));
+  }
+
+  receivedCommand = "";
   if (score.needRefresh()) {
     segmentDisp.setColor(1, 0, 0);
     int team1Point = score.getPointTeam1();
@@ -44,17 +60,9 @@ void loop() {
     segmentDisp.setNumber(getFirstDigit(team2Point), 2);
     segmentDisp.setNumber(getSecondDigit(team2Point), 3);
 
-    segmentDisp.setNumber(score.getTeam1WinnedGame(), 4);
-    segmentDisp.setNumber(score.getTeam2WinnedGame(), 5);
+    segmentDisp.setNumber(score.getTeam1WonGame(), 4);
+    segmentDisp.setNumber(score.getTeam2WonGame(), 5);
     segmentDisp.show();
   }
-}
-
-int getFirstDigit(int score) {
-  return score / 10;
-}
-
-int getSecondDigit(int score) {
-  return score % 10;
 }
 

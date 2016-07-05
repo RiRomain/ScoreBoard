@@ -2,10 +2,9 @@
 
 #define NUMPIXELS      192
 
-RGBSegmentDisplay::RGBSegmentDisplay(int pin)
+RGBSegmentDisplay::RGBSegmentDisplay()
 {
-  pinMode(pin, OUTPUT);
-  //_strip = NeoPixelBus(NUMPIXELS, pin);
+  pinMode(PIN, OUTPUT);
   _red = 1;
   _green = 0;
   _blue = 0;
@@ -16,7 +15,6 @@ RGBSegmentDisplay::RGBSegmentDisplay(int pin)
 
 void RGBSegmentDisplay::begin() {
   _strip.Begin();
- // _strip.clear();
   _strip.Show();
 }
 

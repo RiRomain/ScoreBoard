@@ -10,7 +10,7 @@
 static NeoPixelBus<NeoGrbFeature, NeoEsp8266BitBang800KbpsMethod> _strip(NUMPIXELS, PIN);
 class RGBSegmentDisplay {
 	public:
-		RGBSegmentDisplay(int pin);
+		RGBSegmentDisplay();
 		void setColor(int red, int green, int blue);
 		void setNumber(int number, int index);
 		void begin();
